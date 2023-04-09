@@ -22,5 +22,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('achievements/', include('achievements.urls'))
+    path('achievements/', include('achievements.urls')),
+    path('slack/event', include('achievements.urls'))
+
 ]
