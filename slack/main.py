@@ -1,5 +1,5 @@
 from slack_sdk import WebClient
-from slack_bolt import App
+from slack_bolt import App, Ack
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 import os
 from pprint import pprint as pp
@@ -29,7 +29,7 @@ app = App(token=slack_bot_token, signing_secret=slack_signing_secret)
 def handle_mention(event, say):
     # Extract the username and achievement name from the message
     text: str = event["text"]
-    username: str = text.split(" ")[0][1:]
+    username: str = text.split(" ")[1]
     achievement_name: str = text.split("asked for ")[1][:-1]
     print(text)
 
@@ -79,13 +79,39 @@ def ask_who(message, say):
 
 # Define a handler for button clicks
 @app.action(re.compile("(accept|decline)"))
-def handle_button_click(ack, body, client):
+def handle_button_click(ack: Ack, body: dict, client: WebClient, respond: callable):
     # print("\n\n\n\nteste2\n\n\n\n")
     # Get the user who clicked the button and the action they took
-    user_id = body["user"]["id"]
-    value = body["actions"][0]["value"]
+    user_id: str = body["user"]["id"]
+    value: str = body["actions"][0]["value"]
+    channel_id: str = body["container"]["channel_id"]
+    message_ts: str = body["container"]["message_ts"]
+    user_that_validated: str = body["user"]["name"]
+    
     pp(body)
     pp(client)
+    if value == "accept":
+        text: str = f"@{user_that_validated} approved this request! Achievement sent :)"
+    else:
+        text: str = f"@{user_that_validated} reproved this request! :("
+
+    app.client.chat_update(channel=channel_id, ts=message_ts, blocks= [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": body["message"]["blocks"][0]["text"]["text"]
+                    }
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": text
+                    }
+            }],
+            text="",
+            attachments=[],)
     if value == "accept":
         ack("Achievement granted!")
     elif value == "decline":
