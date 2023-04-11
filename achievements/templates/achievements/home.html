@@ -1,1 +1,18 @@
 {% extends 'achievements/base.html' %}
+
+{% block content %}
+<h1>Homepage</h1>
+<h2>Achievements</h2>
+{% if not achievement_list.empty %}
+    <h2>No achievement uploaded</h2>
+    <button type="button">Upload achievements</button>
+{% else %}
+    <h2>size: {{achievement_list_size}}</h2>
+    <select name="achievemets">
+        {%for achievement in achievement_list %}
+            <option value="{{ achievement.achievement_name }}">{{achievement.achievement_name}}</option>
+        {% endfor %}
+    </select>
+{% endif %}
+
+{% endblock %}

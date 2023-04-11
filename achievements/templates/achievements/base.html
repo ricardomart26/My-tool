@@ -7,17 +7,10 @@
     <title>The tool</title>
 </head>
 <body>
-    <h1>Homepage</h1>
-    <h2>Achievements</h2>
-    <select name="achievemets">
-        {%for achievement in achievement_list %}
-            <option value="{{ achievement.achievement_name }}">{{achievement.achievement_name}}</option>
-        {% endfor %}
-    </select>
-    <ul>
-        {% for achievement in achievement_list %}
-            <li>{{achievement.achievement_name}}</li>
-        {% endfor %}
-    </ul>
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
 </body>
 </html>

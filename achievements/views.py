@@ -9,7 +9,11 @@ from pprint import pprint as pp
 def index(request, id):
     print(id)
     achievement_list = Achievement.objects.all()
-    return render(request, 'achievements/base.html', {"achievement_list": achievement_list})
+    return render(request, 'achievements/home.html', {"achievement_list": achievement_list})
 
 def home(request):
-    return render(request, 'achievements/home.html', {})
+    achievement_list = Achievement.objects.all()
+    return render(request, 'achievements/home.html', {
+        "achievement_list": achievement_list,
+        "achievement_list_size": len(achievement_list)
+        })
