@@ -8,16 +8,4 @@ def debug(msg:str, obj: list):
     pp(obj[0])
     
 
-achievements_list = api.get('achievements', {"campus_id": 38})
-
-debug("achievements_list", achievements_list)
-
-for achievement in achievements_list:
-    print(f'achievement name: {achievement["name"]}\n\
-nbr of success: {achievement["nbr_of_success"]}')
-    campus_list = achievement['campus']
-    print('campus name:', end=" ")
-    for campus in campus_list:
-        print(campus, end=", ")
-    print('\n')
     

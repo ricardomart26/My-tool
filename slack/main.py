@@ -31,7 +31,6 @@ def handle_mention(event, say):
     text: str = event["text"]
     username: str = text.split(" ")[1]
     achievement_name: str = text.split("asked for ")[1][:-1]
-    print(text)
 
     # Create a message to send to the admin
     message = f"{username} asked for the achievement \"{achievement_name}\""
@@ -80,7 +79,6 @@ def ask_who(message, say):
 # Define a handler for button clicks
 @app.action(re.compile("(accept|decline)"))
 def handle_button_click(ack: Ack, body: dict, client: WebClient, respond: callable):
-    # print("\n\n\n\nteste2\n\n\n\n")
     # Get the user who clicked the button and the action they took
     user_id: str = body["user"]["id"]
     value: str = body["actions"][0]["value"]
