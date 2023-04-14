@@ -2,10 +2,10 @@
 
 {% block content %}
 <h1>Homepage</h1>
-<h2>Achievements</h2>
+<h2>Achievements for {{user.username}}</h2>
 {% if not achievement_list.empty %}
     <h2>No achievement uploaded</h2>
-    <button type="button">Upload achievements</button>
+
 {% else %}
     <h2>size: {{achievement_list_size}}</h2>
     <select name="achievemets">
@@ -14,5 +14,11 @@
         {% endfor %}
     </select>
 {% endif %}
+
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
+
 
 {% endblock %}
