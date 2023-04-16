@@ -5,8 +5,9 @@
     {% csrf_token %}
     {{form.as_p}}
     {% if error %}
-    <p style="font-size:10px;color:red">{{error}}</p>
+        <p style="font-size:10px;color:red">{{error}}</p>
     {% endif %}
     <button type="submit" name="signup">Sign up</button>
 </form>
+<a href="{% url 'login_user' %}" class="btn btn-primary">if you already have an account, click here!</a>
 {% endblock %}

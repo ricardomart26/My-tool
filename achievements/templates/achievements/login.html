@@ -1,9 +1,13 @@
 {% extends "achievements/base.html" %}
 
 {% block content %}
-<form method="POST" action="/login">
+<form method="POST" action="login">
     {% csrf_token %}
-    {{form}}
-    <button type="submit" name="login">Login</button>
+    {{form.as_p}}
+    {% if error %}
+        <p style="font-size:10px;color:red">{{error}}</p>
+    {% endif %}
+    <button type="submit" name="login">Log in</button>
 </form>
+<a href="{% url 'signup_user' %}" class="btn btn-primary">if you don't have an account, click here!</a>
 {% endblock %}

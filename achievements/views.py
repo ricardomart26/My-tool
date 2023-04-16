@@ -1,12 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpRequest, HttpResponseNotAllowed
-from achievements.models import Achievement
-from pprint import pprint as pp
-from achievements.forms import LoginForm, SignUpForm
+# from pprint import pprint as pp
+
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, logout
+from django.contrib.auth.hashers import make_password
+
 from achievements.decorators import user_not_authenticated, user_authenticated
-from django.shortcuts import redirect
+from achievements.models import Achievement
+from achievements.forms import LoginForm, SignUpForm
+from achievements.achievement_api import get_achievements
 
 
 def index(request: HttpRequest, id):
@@ -14,10 +17,11 @@ def index(request: HttpRequest, id):
     achievement_list = Achievement.objects.all()
     return render(request, 'achievements/home.html', {"achievement_list": achievement_list})
 
-
-@user_authenticated
+# @user_authenticated
 def home(request: HttpRequest):
     achievement_list = Achievement.objects.all()
+    if not achievement_list.exists():
+        get_achievements()
     return render(request, 'achievements/home.html', {
         "achievement_list": achievement_list,
         "achievement_list_size": len(achievement_list),
@@ -35,14 +39,16 @@ def login_user(request: HttpRequest):
         f = LoginForm(request.POST)
         if f.is_valid():
             username: str = f.cleaned_data["username"]
-            password: str = f.cleaned_data["password"]
-            user = authenticate(username=username, password=password)
+            encoded_password: str = make_password(f.cleaned_data["password"])
+            user = authenticate(username=username, password=encoded_password)
             if user is not None:
-                return redirect('home')    
+                print("Authentication successful")
+                return redirect('home')
             else:
+                print("Authentication failed")
                 return redirect('login_user')
-                # return render(request, 'achievements/login.html', {"form": LoginForm, "error": "User or password wrong"})
         else:
+            print("Authentication failed, form not valid")
             return render(request, 'achievements/login.html', {"form": LoginForm, "error": "Form is invalid"})
     if request.method == 'GET':
         return render(request, 'achievements/login.html', {"form": LoginForm})
@@ -51,18 +57,15 @@ def login_user(request: HttpRequest):
 
 @user_not_authenticated(None, 'home')
 def signup_user(request: HttpRequest):
-    print("Entrou!")
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             username: str = form.cleaned_data["username"]
-            password: str = form.cleaned_data["password"]
+            encoded_password: str = make_password(form.cleaned_data["password"])
             email: str = form.cleaned_data["email"]
             try:
-                user: User = User.objects.create(username=username, email=email, password=password)
+                user: User = User.objects.create(username=username, email=email, password=encoded_password)
             except Exception as e:
-                if e == "UNIQUE constraint failed: auth_user.username":
-                    return render(request, 'achievements/signup.html', {'form': SignUpForm, "error": "Username already in use"})
                 return render(request, 'achievements/signup.html', {'form': SignUpForm, "error": e})
             user.save()
             return render(request, 'achievements/login.html', {"form": LoginForm})
