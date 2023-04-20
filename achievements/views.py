@@ -7,10 +7,9 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth.hashers import make_password
 
 from achievements.decorators import user_not_authenticated, user_authenticated
-from achievements.models import Achievement
+from achievements.models import Achievement, Student
 from achievements.forms import LoginForm, SignUpForm
 from achievements.achievement_api import get_achievements
-
 
 def index(request: HttpRequest, id):
     print(id)
@@ -24,7 +23,6 @@ def home(request: HttpRequest):
         get_achievements()
     return render(request, 'achievements/home.html', {
         "achievement_list": achievement_list,
-        "achievement_list_size": len(achievement_list),
         "user": request.user
         })
 
@@ -71,4 +69,12 @@ def signup_user(request: HttpRequest):
             return render(request, 'achievements/login.html', {"form": LoginForm})
     if request.method == 'GET':
         return render(request, 'achievements/signup.html', {"form": SignUpForm})
+    return HttpResponseNotAllowed(f"<h1> Method {request.method.lower()} not allowed")
+
+
+def get_user_by_username(request: HttpRequest, username: str):
+    user = Student.objects.get(username=username)
+    user_achievements: list[Achievement] = user.achievements.all()
+    if request.method == 'GET':
+        return render(request, 'achievements/user_info.html', {'user': user, "achievements": user_achievements})
     return HttpResponseNotAllowed(f"<h1> Method {request.method.lower()} not allowed")

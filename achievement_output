@@ -1,0 +1,38 @@
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 20, 2023 - 19:51:13
+Django version 4.2, using settings 'my_tool.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CONTROL-C.
+
+
+Getting Campus ID...
+
+Getting 42 Cursus Users...
+Finished getting achievements
+Finished creating students with achivements!
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 20, 2023 - 20:22:28
+Django version 4.2, using settings 'my_tool.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CONTROL-C.
+
+
+Getting Campus ID...
+
+Getting 42 Cursus Users...
+Finished getting achievements
+Finished creating students with achievements!
+Performing system checks...
+
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 20, 2023 - 20:51:02
+Django version 4.2, using settings 'my_tool.settings'
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CONTROL-C.
+

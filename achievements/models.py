@@ -1,6 +1,6 @@
 from django.db import models
-
     
+
 class Student(models.Model):
     user_id = models.IntegerField(default=0)
     username = models.CharField(max_length=20)
@@ -8,7 +8,6 @@ class Student(models.Model):
     
     def __str__(self):
         return self.username
-
 
 # Create your models here.
 class Achievement(models.Model):
@@ -20,8 +19,9 @@ class Achievement(models.Model):
     student = models.ForeignKey(
         Student, 
         on_delete=models.CASCADE,
-        related_name="student",
+        related_name="achievements",
         default=None
     ) 
+
     def __str__(self):
         return self.achievement_name
