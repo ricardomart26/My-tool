@@ -1,0 +1,91 @@
+
+<title>User Information</title>
+<style>
+    /* Container for user information and achievements */
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 20px;
+    }
+
+    /* User info and achievement cards */
+    .user-info, .achievement-card {
+        flex-basis: calc(33.33% - 40px);
+        margin: 10px;
+        padding: 20px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* User info card */
+    .user-info {
+        flex-basis: 100%;
+        margin: 0;
+    }
+
+    /* User image in the user info card */
+    .user-image {
+        flex: 0 0 100px;
+        margin-right: 20px;
+    }
+
+    /* User name and email in the user info card */
+    .user-details {
+        flex: 1;
+    }
+
+    /* Styling for user name and email in the user info card */
+    .user-details h1, .user-details p {
+        margin: 0;
+    }
+
+    /* Achievement card */
+    .achievement-card {
+        max-width: 300px;
+    }
+
+    /* Achievement image in the achievement card */
+    .achievement-image {
+        width: 100px;
+        margin-right: 20px;
+    }
+
+    /* Achievement title in the achievement card */
+    .achievement-title {
+        margin: 0;
+    }
+
+    /* Checkbox for completion status in the achievement card */
+    .achievement-checkbox {
+        margin-top: 10px;
+    }
+</style>
+
+    <div class="container">
+        <div class="user-info">
+            <div class="user-image">
+                <img src="{{ user.image }}" alt="User Image" width="100">
+            </div>
+            <div class="user-details">
+                <h1>{{user.username}}</h1>
+                <p>Email: {{user.email}}</p>
+            </div>
+        </div>
+        {% for achievement in achievement_list %}
+            <div class="achievement-card">
+                <div class="achievement-image">
+                    <img src="{{ achievement.image }}" alt="Achievement Image" width="100">
+                </div>
+                <h2 class="achievement-title">{{achievement.achievement_name}}</h2>
+                <input type="checkbox" class="achievement-checkbox" value=> Completed
+            </div>
+        {% endfor %}
+        <!-- Add more achievement cards here as needed -->
+    </div>
+</body>
+</html>

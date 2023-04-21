@@ -1,0 +1,51 @@
+
+<style>
+    /* Center the content */
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    /* Container for user information */
+    .user-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+    /* User image on the left */
+    .user-image {
+        flex: 0 0 100px;
+        margin-right: 20px;
+    }
+
+    /* User name and email in the center */
+    .user-details {
+        flex: 1;
+    }
+
+    /* Styling for user name and email */
+    .user-details h1, .user-details p {
+        margin: 0;
+    }
+</style>
+{% block content %}
+<div class="user-info">
+    <div class="user-image">
+        <img src="{{ user.image }}" alt="User Image" width="100">
+    </div>
+    <div class="user-details">
+        <h1>{{user.username}}</h1>
+        <p>Email: {{user.email}}</p>
+    </div>
+</div>
+{% endblock %}

@@ -2,3 +2,4 @@
 db.sqlite3
 *.txt
 __pycache__/
+migrations/

@@ -1,8 +1,10 @@
 from ptapi42 import Api42
-import datetime
 from achievements.models import Student, Achievement
 from dotenv import load_dotenv
 from pprint import pprint
+import datetime
+import time
+
 load_dotenv()
 api: Api42 = Api42(requests_per_second=7, log_lvl='DEBUG')
 # campus_name = input("Campus name: ").lower()
@@ -37,11 +39,12 @@ def getAllUsersFrom42Cursus():
                 blackholed_at = datetime.datetime.strptime(user['blackholed_at'].split(".")[0], '%Y-%m-%dT%H:%M:%S')
                 if blackholed_at < datetime.datetime.now():
                     continue 
-            user_info = {
+            user_info: dict = {
                 "login": user['user']['login'],
                 "id": user['user']['id'],
-                "email": user['user']["email"]
-                }
+                "email": user['user']['email'],
+                "image": user['user']['image']['link']
+            }
             users.append(user_info)
 
 
@@ -57,36 +60,46 @@ def getAchievementUsersForCampus():
     return api.get(url=url, params=params)
 
 def get_achievements() -> None:
+    start = time.time()
     getCampusId()
     getAllUsersFrom42Cursus()
+    achievement_counter = 0
+    user_counter = 0
     achievement_list = api.get('achievements', {"campus_id": campus_id})
     print("Finished getting achievements")
     for user in users:
         student: Student = Student(
             username=user["login"], 
             email=user["email"], 
-            user_id=user["id"]
+            user_id=user["id"],
+            image=user['image']
         )
         student.save()
-
+        user_counter += 1
         for achievement in achievement_list:
             if not achievement['nbr_of_success']:
                 achievement['nbr_of_success'] = 0
+            if not achievement['image']:
+                achievement['image'] = ''
             achievement_record = Achievement(
                 student=student,
                 achievement_id=achievement['id'],
                 achievement_name=achievement['name'],
                 nbr_of_success=achievement['nbr_of_success'],
                 description=achievement['name'],
-                completed=False
+                completed=False,
+                image=achievement['image']
             )
             achievement_record.save()
-
+            achievement_counter += 1
+            
     
     achievement_user_from_campus: list[dict] = getAchievementUsersForCampus()
     all_students: list[Student] = Student.objects.all()
     for achievement_user in achievement_user_from_campus:            
-        for student in all_students: 
+        for student in all_students:
+            print(student.user_id)
+            print(achievement_user['user_id'])
             if student.user_id == achievement_user['user_id']:
                 achievement_found: Achievement = student.achievements.all().filter(achievement_id=achievement_user['id'])
                 achievement_found.completed = True
@@ -123,6 +136,14 @@ def get_achievements() -> None:
         # print("Finished non completed achievements")
         # print(f"Finished student {user['login']} achievements")
         # pprint(student.achievements.all())
-    
-    print("Finished creating students with achievements!")
+    end = time.time()
+    t = end - start
+    minutes = int(t / 60)
+    seconds = int((t - int(t)) * 60)
+    print(f"""
+Finished creating students with achievements!
+Took {minutes}m{seconds}s to finish
+Number of students: {user_counter}
+Achievements amount: {achievement_counter}
+""")
 
